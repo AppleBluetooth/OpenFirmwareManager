@@ -19,7 +19,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>IOKitPersonalities</key>
-    <dict>
+	<dict>
             <key>OpenFirmwareManager</key>
             <dict>
                 <key>CFBundleIdentifier</key>
@@ -33,13 +33,13 @@
             </dict>
         </dict>
 	<key>OSBundleLibraries</key>
-    <dict>
-        <key>com.apple.kpi.iokit</key>
-        <string>9.0</string>
-        <key>com.apple.kpi.libkern</key>
-        <string>9.0</string>
-        <key>com.apple.kpi.mach</key>
-        <string>9.0</string>
-    </dict>
+	<dict>
+		<key>com.apple.kpi.iokit</key>
+        	<string>9.0</string>
+        	<key>com.apple.kpi.libkern</key>
+        	<string>9.0</string>
+        	<key>com.apple.kpi.mach</key>
+        	<string>9.0</string>
+    	</dict>
 </dict>
 </plist>
