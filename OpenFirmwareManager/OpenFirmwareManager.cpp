@@ -21,6 +21,7 @@
  */
 
 #include "OpenFirmwareManager.h"
+#include "zutil.h"
 
 bool OpenFirmwareManager::init(OSDictionary * dictionary)
 {

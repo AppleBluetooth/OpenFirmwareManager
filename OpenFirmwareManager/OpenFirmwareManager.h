@@ -26,7 +26,6 @@
 #include <IOKit/IOService.h>
 #include <IOKit/IOLib.h>
 #include <libkern/OSKextLib.h>
-#include "zutil.h"
 
 typedef struct FirmwareDescriptor
 {
