@@ -33,9 +33,8 @@ bool OpenFirmwareManager::init(OSDictionary * dictionary)
 
 void OpenFirmwareManager::free()
 {
-    mFirmwareName = NULL;
+    removeFirmware();
     IOLockFree(mUncompressedFirmwareLock);
-    OSSafeReleaseNULL(mUncompressedFirmwareData);
 }
 
 int OpenFirmwareManager::decompressFirmware(OSData * firmware)
