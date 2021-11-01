@@ -85,16 +85,16 @@ int OpenFirmwareManager::decompressFirmware(OSData * firmware)
     return zlib_result;
 }
 
-IOReturn OpenFirmwareManager::setFirmwareWithName(char * name, FirmwareDescriptor ** firmwareCandidates, int numFirmwares)
+IOReturn OpenFirmwareManager::setFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
     OSData * fwData;
     
     for (int i = 0; i < numFirmwares; ++i)
     {
-        if (firmwareCandidates[i]->name == name)
+        if (firmwareCandidates[i].name == name)
         {
             mFirmwareName = name;
-            fwData = OSData::withBytes(firmwareCandidates[i]->firmwareData, firmwareCandidates[i]->firmwareSize);
+            fwData = OSData::withBytes(firmwareCandidates[i].firmwareData, firmwareCandidates[i].firmwareSize);
             if ( isFirmwareCompressed(fwData) )
             {
                 if ( !decompressFirmware(fwData) )
@@ -134,10 +134,10 @@ char * OpenFirmwareManager::getFirmwareName()
     return mFirmwareName;
 }
 
-IOReturn OpenFirmwareManager::setFirmwareWithDescriptor(FirmwareDescriptor * firmware)
+IOReturn OpenFirmwareManager::setFirmwareWithDescriptor(FirmwareDescriptor firmware)
 {
-    OSData * fwData = OSData::withBytes(firmware->firmwareData, firmware->firmwareSize);
-    mFirmwareName = firmware->name;
+    OSData * fwData = OSData::withBytes(firmware.firmwareData, firmware.firmwareSize);
+    mFirmwareName = firmware.name;
     
     if ( isFirmwareCompressed(fwData) )
     {
@@ -160,14 +160,14 @@ bool OpenFirmwareManager::isFirmwareCompressed(OSData * firmware)
 {
     UInt16 * magic = (UInt16 *) firmware->getBytesNoCopy();
     
-    if ( *magic != 0x0178   // Zlib no compression
-      && *magic != 0x9c78   // Zlib default compression
-      && *magic != 0xda78 ) // Zlib maximum compression
-        return false;
-    return true;
+    if ( *magic == 0x0178   // Zlib no compression
+      || *magic == 0x9c78   // Zlib default compression
+      || *magic == 0xda78 ) // Zlib maximum compression
+        return true;
+    return false;
 }
 
-OpenFirmwareManager * OpenFirmwareManager::withName(char * name, FirmwareDescriptor ** firmwareList, int numFirmwares)
+OpenFirmwareManager * OpenFirmwareManager::withName(char * name, FirmwareDescriptor * firmwareList, int numFirmwares)
 {
     OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
     
@@ -181,7 +181,7 @@ OpenFirmwareManager * OpenFirmwareManager::withName(char * name, FirmwareDescrip
     return me;
 }
 
-OpenFirmwareManager * OpenFirmwareManager::withDescriptor(FirmwareDescriptor * firmware)
+OpenFirmwareManager * OpenFirmwareManager::withDescriptor(FirmwareDescriptor firmware)
 {
     OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
     
@@ -193,17 +193,4 @@ OpenFirmwareManager * OpenFirmwareManager::withDescriptor(FirmwareDescriptor * f
         return NULL;
     }
     return me;
-}
-
-void OpenFirmwareManager::requestResourceCallback(OSKextRequestTag requestTag, OSReturn result, const void * resourceData, uint32_t resourceDataLength, void* context1)
-{
-    ResourceCallbackContext *context = (ResourceCallbackContext*) context1;
-    
-    IOLockLock(context->me->mCompletionLock);
-    if (!result)
-        context->firmware = OSData::withBytes(resourceData, resourceDataLength);
-    IOLockUnlock(context->me->mCompletionLock);
-    
-    // wake waiting task in performUpgrade (in IOLockSleep)...
-    IOLockWakeup(context->me->mCompletionLock, context->me, true);
 }

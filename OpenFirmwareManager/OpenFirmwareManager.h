@@ -45,23 +45,39 @@ class OpenFirmwareManager : public IOService
     };
     
 public:
-    static OpenFirmwareManager * withName(char * name, FirmwareDescriptor ** firmwareList, int numFirmwares);
-    static OpenFirmwareManager * withDescriptor(FirmwareDescriptor * firmware);
+    /*! @function withName
+     *   @abstract Creates an OpenFirmwareManager instance with the name of the firmware in that is requested.
+     *   @discussion After creating the instance, the function calls setFirmwareWithName to set the firmware.
+     *   @param name The name of the requested firmware.
+     *   @param firmwareList A list that consists of all possible firmware candidates.
+     *   @param numFirmwares The number of firmwares in firmwareList.
+     *   @result If the operation is successful, the instance created is returned. */
+    
+    static OpenFirmwareManager * withName(char * name, FirmwareDescriptor * firmwareList, int numFirmwares);
+    
+    virtual IOReturn setFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+    
+    /*! @function withDescriptor
+     *   @abstract Creates an OpenFirmwareManager instance with a firmware descriptor.
+     *   @discussion After creating the instance, the function calls setFirmwareWithDescriptor to set the firmware.
+     *   @param firmware The firmware descriptor upon which the instance will be generated.
+     *   @result If the operation is successful, the instance created is returned. */
+    
+    static OpenFirmwareManager * withDescriptor(FirmwareDescriptor firmware);
 
+    virtual IOReturn setFirmwareWithDescriptor(FirmwareDescriptor firmware);
+    
     virtual bool init( OSDictionary * dictionary = NULL ) APPLE_KEXT_OVERRIDE;
     virtual void free() APPLE_KEXT_OVERRIDE;
+    
+    virtual IOReturn removeFirmware();
+    
+    virtual OSData * getFirmwareUncompressed();
+    virtual char * getFirmwareName();
     
 protected:
     virtual int decompressFirmware(OSData * firmware);
     virtual bool isFirmwareCompressed(OSData * firmware);
-    static void requestResourceCallback(OSKextRequestTag requestTag, OSReturn result, const void * resourceData, uint32_t resourceDataLength, void * context);
-    
-public:
-    virtual IOReturn setFirmwareWithName(char * name, FirmwareDescriptor ** firmwareCandidates, int numFirmwares);
-    virtual IOReturn setFirmwareWithDescriptor(FirmwareDescriptor * firmware);
-    virtual IOReturn removeFirmware();
-    virtual OSData * getFirmwareUncompressed();
-    virtual char * getFirmwareName();
     
 protected:
     char * mFirmwareName;
