@@ -33,6 +33,7 @@
 		BC92576126A3FD9D009DBAD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC92576826A3FDF6009DBAD2 /* zutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zutil.cpp; sourceTree = "<group>"; };
 		BC92576926A3FDF6009DBAD2 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
+		BCAAACE727339790005667DB /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		BCDF218026E703A400432442 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		BCDF218126E703A400432442 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BCEBDB5126EBA0A00075E775 /* FirmwareGenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FirmwareGenerator; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,6 +63,7 @@
 				BC92575C26A3FD9D009DBAD2 /* OpenFirmwareManager */,
 				BCDF218026E703A400432442 /* LICENSE */,
 				BCDF218126E703A400432442 /* README.md */,
+				BCAAACE727339790005667DB /* .gitignore */,
 				BC92575B26A3FD9D009DBAD2 /* Products */,
 			);
 			sourceTree = "<group>";
