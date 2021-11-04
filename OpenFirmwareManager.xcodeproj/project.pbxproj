@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+        BC92576A26A3FDF6009DBAD2 /* zutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC92576826A3FDF6009DBAD2 /* zutil.cpp */; };
+        BC92576B26A3FDF6009DBAD2 /* zutil.h in Headers */ = {isa = PBXBuildFile; fileRef = BC92576926A3FDF6009DBAD2 /* zutil.h */; };
 		BC92575E26A3FD9D009DBAD2 /* OpenFirmwareManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */; };
 		BC92576026A3FD9D009DBAD2 /* OpenFirmwareManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */; };
-		BC92576A26A3FDF6009DBAD2 /* zutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC92576826A3FDF6009DBAD2 /* zutil.cpp */; };
-		BC92576B26A3FDF6009DBAD2 /* zutil.h in Headers */ = {isa = PBXBuildFile; fileRef = BC92576926A3FDF6009DBAD2 /* zutil.h */; };
 		BCDF217D26E6F73F00432442 /* OpenFirmwareManager.h in Resources */ = {isa = PBXBuildFile; fileRef = BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */; };
 /* End PBXBuildFile section */
 
@@ -36,7 +36,6 @@
 		BCAAACE727339790005667DB /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		BCDF218026E703A400432442 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		BCDF218126E703A400432442 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		BCEBDB5126EBA0A00075E775 /* FirmwareGenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FirmwareGenerator; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,7 +71,6 @@
 			isa = PBXGroup;
 			children = (
 				BC92575A26A3FD9D009DBAD2 /* OpenFirmwareManager.kext */,
-				BCEBDB5126EBA0A00075E775 /* FirmwareGenerator */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -122,23 +120,6 @@
 			productReference = BC92575A26A3FD9D009DBAD2 /* OpenFirmwareManager.kext */;
 			productType = "com.apple.product-type.kernel-extension";
 		};
-		BCEBDB5026EBA0A00075E775 /* FirmwareGenerator */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BCEBDB5726EBA0A00075E775 /* Build configuration list for PBXNativeTarget "FirmwareGenerator" */;
-			buildPhases = (
-				BCEBDB4D26EBA0A00075E775 /* Sources */,
-				BCEBDB4E26EBA0A00075E775 /* Frameworks */,
-				BCEBDB4F26EBA0A00075E775 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = FirmwareGenerator;
-			productName = FirmwareGenerator;
-			productReference = BCEBDB5126EBA0A00075E775 /* FirmwareGenerator */;
-			productType = "com.apple.product-type.tool";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -169,7 +150,6 @@
 			projectRoot = "";
 			targets = (
 				BC92575926A3FD9D009DBAD2 /* OpenFirmwareManager */,
-				BCEBDB5026EBA0A00075E775 /* FirmwareGenerator */,
 			);
 		};
 /* End PBXProject section */
@@ -387,15 +367,6 @@
 			buildConfigurations = (
 				BC92576526A3FD9D009DBAD2 /* Debug */,
 				BC92576626A3FD9D009DBAD2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		BCEBDB5726EBA0A00075E775 /* Build configuration list for PBXNativeTarget "FirmwareGenerator" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BCEBDB5526EBA0A00075E775 /* Debug */,
-				BCEBDB5626EBA0A00075E775 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
