@@ -23,8 +23,14 @@
 #include "OpenFirmwareManager.h"
 #include "zutil.h"
 
+#define super IOService
+OSDefineMetaClassAndStructors(OpenFirmwareManager, super)
+
 bool OpenFirmwareManager::init(OSDictionary * dictionary)
 {
+    if ( !super::init() )
+        return false;
+
     mFirmwareName = NULL;
     mUncompressedFirmwareLock = IOLockAlloc();
     mUncompressedFirmwareData = NULL;
@@ -35,6 +41,7 @@ void OpenFirmwareManager::free()
 {
     removeFirmware();
     IOLockFree(mUncompressedFirmwareLock);
+    super::free();
 }
 
 int OpenFirmwareManager::decompressFirmware(OSData * firmware)
