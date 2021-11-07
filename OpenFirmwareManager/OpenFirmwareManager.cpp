@@ -33,6 +33,10 @@ bool OpenFirmwareManager::init(OSDictionary * dictionary)
 
     mFirmwareLock = IOLockAlloc();
     mFirmwares = NULL;
+    mExpansionData = IONew(ExpansionData, 1);
+    if ( !mExpansionData )
+        return false;
+    mExpansionData->mCompletionLock = NULL;
     return true;
 }
 
@@ -80,14 +84,14 @@ OSData * OpenFirmwareManager::decompressFirmware(OSData * firmware)
     zstream.zfree     = zfree;
     
     zlib_result = inflateInit(&zstream);
-    if (zlib_result != Z_OK)
+    if ( zlib_result != Z_OK )
     {
         IOFree(buffer, bufferSize);
         return NULL;
     }
     
     zlib_result = inflate(&zstream, Z_FINISH);
-    if (zlib_result == Z_STREAM_END || zlib_result == Z_OK)
+    if ( zlib_result == Z_STREAM_END || zlib_result == Z_OK )
         uncompressedFirmware = OSData::withBytes(buffer, (unsigned int) zstream.total_out);
     
     inflateEnd(&zstream);
@@ -99,7 +103,7 @@ OSData * OpenFirmwareManager::decompressFirmware(OSData * firmware)
 IOReturn OpenFirmwareManager::addFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
     while ( numFirmwares > 0 )
-        if (firmwareCandidates[--numFirmwares].name == name)
+        if ( firmwareCandidates[--numFirmwares].name == name )
             return addFirmwareWithDescriptor(firmwareCandidates[numFirmwares]);
 
     return kIOReturnUnsupported;
