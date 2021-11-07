@@ -45,45 +45,53 @@ class OpenFirmwareManager : public IOService
     };
     
 public:
-    /*! @function withName
-     *   @abstract Creates an OpenFirmwareManager instance with the name of the firmware in that is requested.
-     *   @discussion After creating the instance, the function calls setFirmwareWithName to set the firmware.
-     *   @param name The name of the requested firmware.
-     *   @param firmwareList A list that consists of all possible firmware candidates.
+    /*! @function withNames
+     *   @abstract Creates an OpenFirmwareManager instance with the names of firmwares requested.
+     *   @discussion After creating the instance, the function calls initWitNames to initialize the instance.
+     *   @param names The names of the requested firmwares.
+     *   @param capacity The number of firmwares requested.
+     *   @param firmwareCandidates A list that consists of all possible firmware candidates.
      *   @param numFirmwares The number of firmwares in firmwareList.
      *   @result If the operation is successful, the instance created is returned. */
     
-    static OpenFirmwareManager * withName(char * name, FirmwareDescriptor * firmwareList, int numFirmwares);
-    
-    virtual IOReturn setFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
-    
-    /*! @function withDescriptor
-     *   @abstract Creates an OpenFirmwareManager instance with a firmware descriptor.
-     *   @discussion After creating the instance, the function calls setFirmwareWithDescriptor to set the firmware.
-     *   @param firmware The firmware descriptor upon which the instance will be generated.
+    static OpenFirmwareManager * withNames(char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+
+    /*! @function withDescriptors
+     *   @abstract Creates an OpenFirmwareManager instance with firmware descriptors.
+     *   @discussion After creating the instance, the function calls initWithFirmwareWithDescriptors to initialize the instance.
+     *   @param firmwares The firmware descriptors upon which the instance is generated.
+     *   @param capacity The number of firmwares requested.
      *   @result If the operation is successful, the instance created is returned. */
     
-    static OpenFirmwareManager * withDescriptor(FirmwareDescriptor firmware);
+    static OpenFirmwareManager * withDescriptors(FirmwareDescriptor * firmwares, int capacity);
 
-    virtual IOReturn setFirmwareWithDescriptor(FirmwareDescriptor firmware);
-    
+    virtual IOReturn addFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+    virtual IOReturn addFirmwareWithDescriptor(FirmwareDescriptor firmware);
+
+    virtual IOReturn removeFirmware(char * name);
+    virtual IOReturn removeFirmwares();
+
     virtual bool init( OSDictionary * dictionary = NULL ) APPLE_KEXT_OVERRIDE;
     virtual void free() APPLE_KEXT_OVERRIDE;
-    
-    virtual IOReturn removeFirmware();
-    
-    virtual OSData * getFirmwareUncompressed();
-    virtual char * getFirmwareName();
+
+    virtual OSData * getFirmwareUncompressed(char * name);
     
 protected:
-    virtual int decompressFirmware(OSData * firmware);
+    virtual bool initWithCapacity(int capacity);
+    virtual bool initWithNames(char ** name, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+    virtual bool initWithDescriptors(FirmwareDescriptor * firmwares, int capacity);
     virtual bool isFirmwareCompressed(OSData * firmware);
+    virtual OSData * decompressFirmware(OSData * firmware);
     
 protected:
-    char * mFirmwareName;
-    IOLock * mUncompressedFirmwareLock;
-    OSData * mUncompressedFirmwareData;
-    IOLock * mCompletionLock;
+    IOLock * mFirmwareLock;
+    OSDictionary * mFirmwares;
+
+    struct ExpansionData
+    {
+        IOLock * mCompletionLock;
+    };
+    ExpansionData * mExpansionData;
 };
 
 #endif

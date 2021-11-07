@@ -31,21 +31,32 @@ bool OpenFirmwareManager::init(OSDictionary * dictionary)
     if ( !super::init() )
         return false;
 
-    mFirmwareName = NULL;
-    mUncompressedFirmwareLock = IOLockAlloc();
-    mUncompressedFirmwareData = NULL;
+    mFirmwareLock = IOLockAlloc();
+    mFirmwares = NULL;
     return true;
 }
 
 void OpenFirmwareManager::free()
 {
-    removeFirmware();
-    IOLockFree(mUncompressedFirmwareLock);
+    removeFirmwares();
+    IOLockFree(mFirmwareLock);
     super::free();
 }
 
-int OpenFirmwareManager::decompressFirmware(OSData * firmware)
+bool OpenFirmwareManager::isFirmwareCompressed(OSData * firmware)
 {
+    UInt16 * magic = (UInt16 *) firmware->getBytesNoCopy();
+
+    if ( *magic == 0x0178   // Zlib no compression
+      || *magic == 0x9c78   // Zlib default compression
+      || *magic == 0xda78 ) // Zlib maximum compression
+        return true;
+    return false;
+}
+
+OSData * OpenFirmwareManager::decompressFirmware(OSData * firmware)
+{
+    OSData * uncompressedFirmware = NULL;
     z_stream zstream;
     int zlib_result;
     void * buffer = NULL;
@@ -54,10 +65,7 @@ int OpenFirmwareManager::decompressFirmware(OSData * firmware)
     if ( !isFirmwareCompressed(firmware) )
     {
         firmware->retain();
-        IOLockLock(mUncompressedFirmwareLock);
-        mUncompressedFirmwareData = firmware;
-        IOLockUnlock(mUncompressedFirmwareLock);
-        return Z_OK;
+        return firmware;
     }
     
     bufferSize = firmware->getLength() * 4;
@@ -75,112 +83,154 @@ int OpenFirmwareManager::decompressFirmware(OSData * firmware)
     if (zlib_result != Z_OK)
     {
         IOFree(buffer, bufferSize);
-        return zlib_result;
+        return NULL;
     }
     
     zlib_result = inflate(&zstream, Z_FINISH);
     if (zlib_result == Z_STREAM_END || zlib_result == Z_OK)
-    {
-        IOLockLock(mUncompressedFirmwareLock);
-        mUncompressedFirmwareData = OSData::withBytes(buffer, (unsigned int) zstream.total_out);
-        IOLockUnlock(mUncompressedFirmwareLock);
-    }
+        uncompressedFirmware = OSData::withBytes(buffer, (unsigned int) zstream.total_out);
     
     inflateEnd(&zstream);
     IOFree(buffer, bufferSize);
-    
-    return zlib_result;
+
+    return uncompressedFirmware;
 }
 
-IOReturn OpenFirmwareManager::setFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
+IOReturn OpenFirmwareManager::addFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
-    OSData * fwData;
-    
-    for (int i = 0; i < numFirmwares; ++i)
-    {
-        if (firmwareCandidates[i].name == name)
-        {
-            mFirmwareName = name;
-            fwData = OSData::withBytes(firmwareCandidates[i].firmwareData, firmwareCandidates[i].firmwareSize);
-            if ( isFirmwareCompressed(fwData) )
-            {
-                if ( !decompressFirmware(fwData) )
-                {
-                    OSSafeReleaseNULL(fwData);
-                    return kIOReturnSuccess;
-                }
-                OSSafeReleaseNULL(fwData);
-                return kIOReturnError;
-            }
-            IOLockLock(mUncompressedFirmwareLock);
-            mUncompressedFirmwareData = fwData;
-            IOLockUnlock(mUncompressedFirmwareLock);
-            return kIOReturnSuccess;
-        }
-    }
+    while ( numFirmwares > 0 )
+        if (firmwareCandidates[--numFirmwares].name == name)
+            return addFirmwareWithDescriptor(firmwareCandidates[numFirmwares]);
+
     return kIOReturnUnsupported;
 }
 
-IOReturn OpenFirmwareManager::removeFirmware()
+IOReturn OpenFirmwareManager::addFirmwareWithDescriptor(FirmwareDescriptor firmware)
 {
-    mFirmwareName = NULL;
-    
-    IOLockLock(mUncompressedFirmwareLock);
-    OSSafeReleaseNULL(mUncompressedFirmwareData);
-    IOLockUnlock(mUncompressedFirmwareLock);
-    return kIOReturnSuccess;
-}
+    IOReturn err = kIOReturnSuccess;
 
-OSData * OpenFirmwareManager::getFirmwareUncompressed()
-{
-    return mUncompressedFirmwareData;
-}
+    IOLockLock(mFirmwareLock);
+    if ( !mFirmwares )
+    {
+        IOLockUnlock(mFirmwareLock);
+        return kIOReturnInvalid;
+    }
+    IOLockUnlock(mFirmwareLock);
 
-char * OpenFirmwareManager::getFirmwareName()
-{
-    return mFirmwareName;
-}
-
-IOReturn OpenFirmwareManager::setFirmwareWithDescriptor(FirmwareDescriptor firmware)
-{
+    OSData * uncompressedFirmware;
     OSData * fwData = OSData::withBytes(firmware.firmwareData, firmware.firmwareSize);
-    mFirmwareName = firmware.name;
-    
+    if ( !fwData )
+        return kIOReturnInvalid;
+
     if ( isFirmwareCompressed(fwData) )
     {
-        if ( !decompressFirmware(fwData) )
-        {
-            OSSafeReleaseNULL(fwData);
-            return kIOReturnSuccess;
-        }
+        uncompressedFirmware = decompressFirmware(fwData);
         OSSafeReleaseNULL(fwData);
-        return kIOReturnError;
+        if ( !uncompressedFirmware )
+            return kIOReturnError;
+        goto SET_FIRMWARE;
     }
-    
-    IOLockLock(mUncompressedFirmwareLock);
-    mUncompressedFirmwareData = fwData;
-    IOLockUnlock(mUncompressedFirmwareLock);
+    uncompressedFirmware = fwData;
+
+SET_FIRMWARE:
+    IOLockLock(mFirmwareLock);
+    if ( !mFirmwares->setObject(firmware.name, uncompressedFirmware) )
+        err = kIOReturnError;
+
+    OSSafeReleaseNULL(uncompressedFirmware);
+
+OVER:
+    IOLockUnlock(mFirmwareLock);
+    return err;
+}
+
+IOReturn OpenFirmwareManager::removeFirmware(char * name)
+{
+    IOLockLock(mFirmwareLock);
+    if ( !mFirmwares )
+    {
+        IOLockUnlock(mFirmwareLock);
+        return kIOReturnInvalid;
+    }
+    mFirmwares->removeObject(name);
+    IOLockUnlock(mFirmwareLock);
+
     return kIOReturnSuccess;
 }
 
-bool OpenFirmwareManager::isFirmwareCompressed(OSData * firmware)
+IOReturn OpenFirmwareManager::removeFirmwares()
 {
-    UInt16 * magic = (UInt16 *) firmware->getBytesNoCopy();
-    
-    if ( *magic == 0x0178   // Zlib no compression
-      || *magic == 0x9c78   // Zlib default compression
-      || *magic == 0xda78 ) // Zlib maximum compression
-        return true;
-    return false;
+    IOLockLock(mFirmwareLock);
+    if ( !mFirmwares )
+    {
+        IOLockUnlock(mFirmwareLock);
+        return kIOReturnInvalid;
+    }
+    mFirmwares->flushCollection();
+    IOLockUnlock(mFirmwareLock);
+    return kIOReturnSuccess;
 }
 
-OpenFirmwareManager * OpenFirmwareManager::withName(char * name, FirmwareDescriptor * firmwareList, int numFirmwares)
+OSData * OpenFirmwareManager::getFirmwareUncompressed(char * name)
+{
+    OSData * fwData;
+
+    IOLockLock(mFirmwareLock);
+    if ( !mFirmwares )
+    {
+        IOLockUnlock(mFirmwareLock);
+        return NULL;
+    }
+    fwData = OSDynamicCast(OSData, mFirmwares->getObject(name));
+    IOLockUnlock(mFirmwareLock);
+    return fwData;
+}
+
+bool OpenFirmwareManager::initWithCapacity(int capacity)
+{
+    if ( !init() || capacity <= 0 )
+        return false;
+
+    IOLockLock(mFirmwareLock);
+    mFirmwares = OSDictionary::withCapacity(capacity);
+    if ( !mFirmwares )
+    {
+        IOLockUnlock(mFirmwareLock);
+        return false;
+    }
+    IOLockUnlock(mFirmwareLock);
+    return true;
+}
+
+bool OpenFirmwareManager::initWithNames(char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
+{
+    if ( !initWithCapacity(capacity) )
+        return false;
+
+    while ( capacity > 0 )
+        addFirmwareWithName(names[--capacity], firmwareCandidates, numFirmwares);
+
+    return true;
+}
+
+bool OpenFirmwareManager::initWithDescriptors(FirmwareDescriptor * firmwares, int capacity)
+{
+    if ( !initWithCapacity(capacity) )
+        return false;
+
+    while ( capacity > 0 )
+        addFirmwareWithDescriptor(firmwares[--capacity]); // no need to fail if a firmware is not added
+
+    return true;
+}
+
+OpenFirmwareManager * OpenFirmwareManager::withNames(char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
     OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
     
     if ( !me )
         return NULL;
-    if ( me->setFirmwareWithName(name, firmwareList, numFirmwares) )
+    if ( !me->initWithNames(names, capacity, firmwareCandidates, numFirmwares) )
     {
         OSSafeReleaseNULL(me);
         return NULL;
@@ -188,13 +238,13 @@ OpenFirmwareManager * OpenFirmwareManager::withName(char * name, FirmwareDescrip
     return me;
 }
 
-OpenFirmwareManager * OpenFirmwareManager::withDescriptor(FirmwareDescriptor firmware)
+OpenFirmwareManager * OpenFirmwareManager::withDescriptors(FirmwareDescriptor * firmwares, int capacity)
 {
     OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
     
     if ( !me )
         return NULL;
-    if ( me->setFirmwareWithDescriptor(firmware) )
+    if ( me->initWithDescriptors(firmwares, capacity) )
     {
         OSSafeReleaseNULL(me);
         return NULL;
