@@ -7,24 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-        BC92576A26A3FDF6009DBAD2 /* zutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC92576826A3FDF6009DBAD2 /* zutil.cpp */; };
-        BC92576B26A3FDF6009DBAD2 /* zutil.h in Headers */ = {isa = PBXBuildFile; fileRef = BC92576926A3FDF6009DBAD2 /* zutil.h */; };
 		BC92575E26A3FD9D009DBAD2 /* OpenFirmwareManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */; };
 		BC92576026A3FD9D009DBAD2 /* OpenFirmwareManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */; };
+		BC92576A26A3FDF6009DBAD2 /* zutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC92576826A3FDF6009DBAD2 /* zutil.cpp */; };
+		BC92576B26A3FDF6009DBAD2 /* zutil.h in Headers */ = {isa = PBXBuildFile; fileRef = BC92576926A3FDF6009DBAD2 /* zutil.h */; };
 		BCDF217D26E6F73F00432442 /* OpenFirmwareManager.h in Resources */ = {isa = PBXBuildFile; fileRef = BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		BCEBDB4F26EBA0A00075E775 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		BC92575A26A3FD9D009DBAD2 /* OpenFirmwareManager.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenFirmwareManager.kext; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -40,13 +28,6 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		BC92575726A3FD9D009DBAD2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BCEBDB4E26EBA0A00075E775 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -131,9 +112,6 @@
 					BC92575926A3FD9D009DBAD2 = {
 						CreatedOnToolsVersion = 12.4;
 					};
-					BCEBDB5026EBA0A00075E775 = {
-						CreatedOnToolsVersion = 12.5.1;
-					};
 				};
 			};
 			buildConfigurationList = BC92575426A3FD9D009DBAD2 /* Build configuration list for PBXProject "OpenFirmwareManager" */;
@@ -172,13 +150,6 @@
 			files = (
 				BC92576A26A3FDF6009DBAD2 /* zutil.cpp in Sources */,
 				BC92576026A3FD9D009DBAD2 /* OpenFirmwareManager.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BCEBDB4D26EBA0A00075E775 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,11 +273,11 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.0.0d1;
+				CURRENT_PROJECT_VERSION = 1.0.0;
 				INFOPLIST_FILE = OpenFirmwareManager/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MODULE_NAME = com.cjiang.OpenFirmwareManager;
-				MODULE_VERSION = 1.0.0d1;
+				MODULE_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cjiang.OpenFirmwareManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -320,33 +291,15 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.0.0d1;
+				CURRENT_PROJECT_VERSION = 1.0.0;
 				INFOPLIST_FILE = OpenFirmwareManager/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MODULE_NAME = com.cjiang.OpenFirmwareManager;
-				MODULE_VERSION = 1.0.0d1;
+				MODULE_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cjiang.OpenFirmwareManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = kext;
-			};
-			name = Release;
-		};
-		BCEBDB5526EBA0A00075E775 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				MACOSX_DEPLOYMENT_TARGET = 11.3;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		BCEBDB5626EBA0A00075E775 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				MACOSX_DEPLOYMENT_TARGET = 11.3;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
