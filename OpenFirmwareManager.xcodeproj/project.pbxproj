@@ -11,6 +11,8 @@
 		BC92576026A3FD9D009DBAD2 /* OpenFirmwareManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */; };
 		BC92576A26A3FDF6009DBAD2 /* zutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC92576826A3FDF6009DBAD2 /* zutil.cpp */; };
 		BC92576B26A3FDF6009DBAD2 /* zutil.h in Headers */ = {isa = PBXBuildFile; fileRef = BC92576926A3FDF6009DBAD2 /* zutil.h */; };
+		BCB7BA202738DE390029BC09 /* FirmwareList.h in Headers */ = {isa = PBXBuildFile; fileRef = BCB7BA1F2738DE390029BC09 /* FirmwareList.h */; };
+		BCB7BA212738DE6F0029BC09 /* FirmwareList.h in Resources */ = {isa = PBXBuildFile; fileRef = BCB7BA1F2738DE390029BC09 /* FirmwareList.h */; };
 		BCDF217D26E6F73F00432442 /* OpenFirmwareManager.h in Resources */ = {isa = PBXBuildFile; fileRef = BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */; };
 /* End PBXBuildFile section */
 
@@ -22,6 +24,7 @@
 		BC92576826A3FDF6009DBAD2 /* zutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zutil.cpp; sourceTree = "<group>"; };
 		BC92576926A3FDF6009DBAD2 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
 		BCAAACE727339790005667DB /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		BCB7BA1F2738DE390029BC09 /* FirmwareList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirmwareList.h; sourceTree = "<group>"; };
 		BCDF218026E703A400432442 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		BCDF218126E703A400432442 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -63,6 +66,7 @@
 				BC92576826A3FDF6009DBAD2 /* zutil.cpp */,
 				BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */,
 				BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */,
+				BCB7BA1F2738DE390029BC09 /* FirmwareList.h */,
 				BC92576126A3FD9D009DBAD2 /* Info.plist */,
 			);
 			path = OpenFirmwareManager;
@@ -75,8 +79,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC92575E26A3FD9D009DBAD2 /* OpenFirmwareManager.h in Headers */,
 				BC92576B26A3FDF6009DBAD2 /* zutil.h in Headers */,
+				BC92575E26A3FD9D009DBAD2 /* OpenFirmwareManager.h in Headers */,
+				BCB7BA202738DE390029BC09 /* FirmwareList.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,6 +143,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCDF217D26E6F73F00432442 /* OpenFirmwareManager.h in Resources */,
+				BCB7BA212738DE6F0029BC09 /* FirmwareList.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
