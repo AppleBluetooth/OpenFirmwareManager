@@ -228,6 +228,20 @@ bool OpenFirmwareManager::initWithDescriptors(FirmwareDescriptor * firmwares, in
     return true;
 }
 
+OpenFirmwareManager * OpenFirmwareManager::withCapacity(int capacity)
+{
+    OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
+
+    if ( !me )
+        return NULL;
+    if ( !me->initWithCapacity(capacity) )
+    {
+        OSSafeReleaseNULL(me);
+        return NULL;
+    }
+    return me;
+}
+
 OpenFirmwareManager * OpenFirmwareManager::withNames(char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
     OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);

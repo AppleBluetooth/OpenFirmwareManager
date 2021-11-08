@@ -45,6 +45,8 @@ class OpenFirmwareManager : public IOService
     };
     
 public:
+    static OpenFirmwareManager * withCapacity(int capacity);
+
     /*! @function withNames
      *   @abstract Creates an OpenFirmwareManager instance with the names of firmwares requested.
      *   @discussion After creating the instance, the function calls initWitNames to initialize the instance.
