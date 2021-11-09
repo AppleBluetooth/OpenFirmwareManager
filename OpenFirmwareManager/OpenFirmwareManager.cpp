@@ -36,7 +36,7 @@ bool OpenFirmwareManager::init(OSDictionary * dictionary)
     mExpansionData = IONew(ExpansionData, 1);
     if ( !mExpansionData )
         return false;
-    mExpansionData->mCompletionLock = NULL;
+    mExpansionData->mCompletionLock = IOLockAlloc();
     return true;
 }
 
@@ -44,6 +44,8 @@ void OpenFirmwareManager::free()
 {
     removeFirmwares();
     IOLockFree(mFirmwareLock);
+    IOLockFree(mExpansionData->mCompletionLock);
+    IOSafeDeleteNULL(mExpansionData, ExpansionData, 1);
     super::free();
 }
 
