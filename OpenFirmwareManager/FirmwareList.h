@@ -2,7 +2,6 @@
  *  Released under "The GNU General Public License (GPL-2.0)"
  *
  *  Copyright (c) 2021 cjiang. All rights reserved.
- *  Copyright (C) 2015 Intel Corporation.
  *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
