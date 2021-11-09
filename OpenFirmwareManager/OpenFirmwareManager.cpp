@@ -20,6 +20,7 @@
  *  Zlib implementation based on /apple/xnu/libkern/c++/OSKext.cpp
  */
 
+#include "Logs.h"
 #include "OpenFirmwareManager.h"
 #include "zutil.h"
 
