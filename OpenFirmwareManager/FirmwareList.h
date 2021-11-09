@@ -19,8 +19,8 @@
  *
  */
 
-#ifndef FirmwareList_h
-#define FirmwareList_h
+#ifndef _OFM_FIRMWARELIST_H
+#define _OFM_FIRMWARELIST_H
 
 #include "OpenFirmwareManager.h"
 

@@ -20,8 +20,8 @@
  *  Zlib implementation based on /apple/xnu/libkern/c++/OSKext.cpp
  */
 
-#ifndef OpenFirmwareManager_h
-#define OpenFirmwareManager_h
+#ifndef _OFM_OPENFIRMWAREMANAGER_H
+#define _OFM_OPENFIRMWAREMANAGER_H
 
 #include <IOKit/IOService.h>
 #include <IOKit/IOLib.h>

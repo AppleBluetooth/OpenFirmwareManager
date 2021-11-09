@@ -20,8 +20,8 @@
  *  Zlib implementation based on /apple/xnu/libkern/c++/OSKext.cpp
  */
 
-#ifndef zutil_h
-#define zutil_h
+#ifndef _OFM_ZUTIL_H
+#define _OFM_ZUTIL_H
 
 #include <IOKit/IOLib.h>
 #include <IOKit/IOTypes.h>
@@ -36,4 +36,4 @@ typedef struct z_mem
 extern void * zalloc(void * opaque, UInt32 items, UInt32 size);
 extern void zfree(void * opaque, void * ptr);
 
-#endif /* zutil_h */
+#endif
