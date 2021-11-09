@@ -121,7 +121,7 @@ void OpenFirmwareManager::requestResourceCallback(OSKextRequestTag requestTag, O
     IOLockWakeup(context->me->mExpansionData->mCompletionLock, context->me, true);
 }
 
-IOReturn OpenFirmwareManager::addFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
+IOReturn OpenFirmwareManager::addFirmwareWithName(const char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
     while ( numFirmwares > 0 )
         if ( firmwareCandidates[--numFirmwares].name == name )
@@ -186,12 +186,12 @@ IOReturn OpenFirmwareManager::addFirmwareWithFile(const char * kextIdentifier, c
         return ret;
 
     kprintf("[OpenFirmwareManager][addFirmwareWithFile] Obtained firmware \"%s\" from resources.\n", fileName);
-    context.descriptor.name = (char *) fileName;
+    context.descriptor.name = fileName;
 
     return addFirmwareWithDescriptor(context.descriptor);
 }
 
-IOReturn OpenFirmwareManager::removeFirmware(char * name)
+IOReturn OpenFirmwareManager::removeFirmware(const char * name)
 {
     IOLockLock(mFirmwareLock);
     if ( !mFirmwares )
@@ -218,7 +218,7 @@ IOReturn OpenFirmwareManager::removeFirmwares()
     return kIOReturnSuccess;
 }
 
-OSData * OpenFirmwareManager::getFirmwareUncompressed(char * name)
+OSData * OpenFirmwareManager::getFirmwareUncompressed(const char * name)
 {
     OSData * fwData;
 
@@ -249,7 +249,7 @@ bool OpenFirmwareManager::initWithCapacity(int capacity)
     return true;
 }
 
-bool OpenFirmwareManager::initWithNames(char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
+bool OpenFirmwareManager::initWithNames(const char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
     if ( !initWithCapacity(capacity) )
         return false;
@@ -299,7 +299,7 @@ OpenFirmwareManager * OpenFirmwareManager::withCapacity(int capacity)
     return me;
 }
 
-OpenFirmwareManager * OpenFirmwareManager::withNames(char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
+OpenFirmwareManager * OpenFirmwareManager::withNames(const char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
     OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
     

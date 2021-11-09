@@ -29,7 +29,7 @@
 
 typedef struct FirmwareDescriptor
 {
-    char * name;
+    const char * name;
     UInt8 * firmwareData;
     UInt32 firmwareSize;
 } FirmwareDescriptor;
@@ -56,7 +56,7 @@ public:
      *   @param numFirmwares The number of firmwares in firmwareList.
      *   @result If the operation is successful, the instance created is returned. */
     
-    static OpenFirmwareManager * withNames(char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+    static OpenFirmwareManager * withNames(const char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
 
     /*! @function withDescriptors
      *   @abstract Creates an OpenFirmwareManager instance with firmware descriptors.
@@ -69,23 +69,23 @@ public:
 
     static OpenFirmwareManager * withFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity);
 
-    virtual IOReturn addFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+    virtual IOReturn addFirmwareWithName(const char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
     virtual IOReturn addFirmwareWithDescriptor(FirmwareDescriptor firmware);
     virtual IOReturn addFirmwareWithFile(const char * kextIdentifier, const char * fileName);
 
-    virtual IOReturn removeFirmware(char * name);
+    virtual IOReturn removeFirmware(const char * name);
     virtual IOReturn removeFirmwares();
 
     virtual bool init( OSDictionary * dictionary = NULL ) APPLE_KEXT_OVERRIDE;
     virtual void free() APPLE_KEXT_OVERRIDE;
 
-    virtual OSData * getFirmwareUncompressed(char * name);
+    virtual OSData * getFirmwareUncompressed(const char * name);
     
 protected:
     static void requestResourceCallback(OSKextRequestTag requestTag, OSReturn result, const void * resourceData, uint32_t resourceDataLength, void * context);
 
     virtual bool initWithCapacity(int capacity);
-    virtual bool initWithNames(char ** name, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+    virtual bool initWithNames(const char ** name, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
     virtual bool initWithDescriptors(FirmwareDescriptor * firmwares, int capacity);
     virtual bool initWithFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity);
     virtual bool isFirmwareCompressed(OSData * firmware);
