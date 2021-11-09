@@ -263,6 +263,14 @@ bool OpenFirmwareManager::initWithNames(const char ** names, int capacity, Firmw
     return true;
 }
 
+bool OpenFirmwareManager::initWithName(const char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
+{
+    if ( !initWithCapacity(1) )
+        return false;
+
+    return !addFirmwareWithName(name, firmwareCandidates, numFirmwares);
+}
+
 bool OpenFirmwareManager::initWithDescriptors(FirmwareDescriptor * firmwares, int capacity)
 {
     if ( !initWithCapacity(capacity) )
@@ -272,6 +280,14 @@ bool OpenFirmwareManager::initWithDescriptors(FirmwareDescriptor * firmwares, in
         addFirmwareWithDescriptor(firmwares[--capacity]); // no need to fail if a firmware is not added
 
     return true;
+}
+
+bool OpenFirmwareManager::initWithDescriptor(FirmwareDescriptor firmware)
+{
+    if ( !initWithCapacity(1) )
+        return false;
+
+    return !addFirmwareWithDescriptor(firmware);
 }
 
 bool OpenFirmwareManager::initWithFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity)
@@ -286,6 +302,14 @@ bool OpenFirmwareManager::initWithFiles(const char ** kextIdentifiers, const cha
     }
 
     return true;
+}
+
+bool OpenFirmwareManager::initWithFile(const char * kextIdentifier, const char * fileName)
+{
+    if ( !initWithCapacity(1) )
+        return false;
+
+    return !addFirmwareWithFile(kextIdentifier, fileName);
 }
 
 OpenFirmwareManager * OpenFirmwareManager::withCapacity(int capacity)
@@ -316,6 +340,20 @@ OpenFirmwareManager * OpenFirmwareManager::withNames(const char ** names, int ca
     return me;
 }
 
+OpenFirmwareManager * OpenFirmwareManager::withName(const char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
+{
+    OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
+
+    if ( !me )
+        return NULL;
+    if ( !me->initWithName(name, firmwareCandidates, numFirmwares) )
+    {
+        OSSafeReleaseNULL(me);
+        return NULL;
+    }
+    return me;
+}
+
 OpenFirmwareManager * OpenFirmwareManager::withDescriptors(FirmwareDescriptor * firmwares, int capacity)
 {
     OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
@@ -330,6 +368,20 @@ OpenFirmwareManager * OpenFirmwareManager::withDescriptors(FirmwareDescriptor * 
     return me;
 }
 
+OpenFirmwareManager * OpenFirmwareManager::withDescriptor(FirmwareDescriptor firmware)
+{
+    OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
+
+    if ( !me )
+        return NULL;
+    if ( !me->initWithDescriptor(firmware) )
+    {
+        OSSafeReleaseNULL(me);
+        return NULL;
+    }
+    return me;
+}
+
 OpenFirmwareManager * OpenFirmwareManager::withFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity)
 {
     OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
@@ -337,6 +389,20 @@ OpenFirmwareManager * OpenFirmwareManager::withFiles(const char ** kextIdentifie
     if ( !me )
         return NULL;
     if ( !me->initWithFiles(kextIdentifiers, fileNames, capacity) )
+    {
+        OSSafeReleaseNULL(me);
+        return NULL;
+    }
+    return me;
+}
+
+OpenFirmwareManager * OpenFirmwareManager::withFile(const char * kextIdentifier, const char * fileName)
+{
+    OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
+
+    if ( !me )
+        return NULL;
+    if ( !me->initWithFile(kextIdentifier, fileName) )
     {
         OSSafeReleaseNULL(me);
         return NULL;

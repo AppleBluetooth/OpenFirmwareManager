@@ -57,6 +57,7 @@ public:
      *   @result If the operation is successful, the instance created is returned. */
     
     static OpenFirmwareManager * withNames(const char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+    static OpenFirmwareManager * withName(const char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
 
     /*! @function withDescriptors
      *   @abstract Creates an OpenFirmwareManager instance with firmware descriptors.
@@ -66,8 +67,10 @@ public:
      *   @result If the operation is successful, the instance created is returned. */
     
     static OpenFirmwareManager * withDescriptors(FirmwareDescriptor * firmwares, int capacity);
+    static OpenFirmwareManager * withDescriptor(FirmwareDescriptor firmware);
 
     static OpenFirmwareManager * withFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity);
+    static OpenFirmwareManager * withFile(const char * kextIdentifier, const char * fileName);
 
     virtual IOReturn addFirmwareWithName(const char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
     virtual IOReturn addFirmwareWithDescriptor(FirmwareDescriptor firmware);
@@ -85,9 +88,12 @@ protected:
     static void requestResourceCallback(OSKextRequestTag requestTag, OSReturn result, const void * resourceData, uint32_t resourceDataLength, void * context);
 
     virtual bool initWithCapacity(int capacity);
-    virtual bool initWithNames(const char ** name, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+    virtual bool initWithNames(const char ** names, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
+    virtual bool initWithName(const char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
     virtual bool initWithDescriptors(FirmwareDescriptor * firmwares, int capacity);
+    virtual bool initWithDescriptor(FirmwareDescriptor firmware);
     virtual bool initWithFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity);
+    virtual bool initWithFile(const char * kextIdentifier, const char * fileName);
     virtual bool isFirmwareCompressed(OSData * firmware);
     virtual OSData * decompressFirmware(OSData * firmware);
     
