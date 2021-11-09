@@ -19,19 +19,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(MODULE_VERSION)</string>
 	<key>IOKitPersonalities</key>
-	<dict>
-		<key>OpenFirmwareManager</key>
-		<dict>
-			<key>CFBundleIdentifier</key>
-			<string>com.cjiang.OpenFirmwareManager</string>
-			<key>IOClass</key>
-			<string>OpenFirmwareManager</string>
-			<key>IOMatchCategory</key>
-			<string>OpenFirmwareManager</string>
-			<key>IOProviderClass</key>
-			<string>IOResources</string>
-		</dict>
-	</dict>
+	<dict/>
 	<key>OSBundleLibraries</key>
 	<dict>
 		<key>com.apple.kpi.iokit</key>
