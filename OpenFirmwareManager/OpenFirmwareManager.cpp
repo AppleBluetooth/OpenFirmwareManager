@@ -111,12 +111,12 @@ void OpenFirmwareManager::requestResourceCallback(OSKextRequestTag requestTag, O
 
     if (kOSReturnSuccess == result)
     {
-        AlwaysLog("requestResourceCallback", "%d bytes of data.\n", resourceDataLength);
+        DebugLog("requestResourceCallback", "%d bytes of data.\n", resourceDataLength);
         context->descriptor.firmwareData = (UInt8 *) resourceData;
         context->descriptor.firmwareSize = resourceDataLength;
     }
     else
-        kprintf("[OpenFirmwareManager][requestResourceCallback] Retrieved error: %08x\n", result);
+        DebugLog("requestResourceCallback", "Retrieved error: %08x\n", result);
 
     IOLockUnlock(context->me->mExpansionData->mCompletionLock);
 
@@ -179,7 +179,7 @@ IOReturn OpenFirmwareManager::addFirmwareWithFile(const char * kextIdentifier, c
     ResourceCallbackContext context = { .me = this };
 
     OSReturn ret = OSKextRequestResource(kextIdentifier, fileName, requestResourceCallback, &context, NULL);
-    kprintf("[OpenFirmwareManager][addFirmwareWithFile] OSKextRequestResource: %08x\n", ret);
+    DebugLog("addFirmwareWithFile", "OSKextRequestResource: %08x\n", ret);
 
     // wait for completion of the async read
     IOLockSleep(mExpansionData->mCompletionLock, this, 0);
@@ -188,7 +188,7 @@ IOReturn OpenFirmwareManager::addFirmwareWithFile(const char * kextIdentifier, c
     if ( !context.descriptor.firmwareData || context.descriptor.firmwareSize <= 0 )
         return ret;
 
-    kprintf("[OpenFirmwareManager][addFirmwareWithFile] Obtained firmware \"%s\" from resources.\n", fileName);
+    AlwaysLog("addFirmwareWithFile", "Obtained firmware \"%s\" from resources.\n", fileName);
     context.descriptor.name = fileName;
 
     return addFirmwareWithDescriptor(context.descriptor);
