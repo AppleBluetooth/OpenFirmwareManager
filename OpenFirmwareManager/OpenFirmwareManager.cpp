@@ -111,7 +111,7 @@ void OpenFirmwareManager::requestResourceCallback(OSKextRequestTag requestTag, O
 
     if (kOSReturnSuccess == result)
     {
-        kprintf("[OpenFirmwareManager][requestResourceCallback] %d bytes of data.\n", resourceDataLength);
+        AlwaysLog("requestResourceCallback", "%d bytes of data.\n", resourceDataLength);
         context->descriptor.firmwareData = (UInt8 *) resourceData;
         context->descriptor.firmwareSize = resourceDataLength;
     }

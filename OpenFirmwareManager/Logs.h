@@ -19,7 +19,26 @@
  *
  */
 
-#ifndef Logs_h
-#define Logs_h
+#ifndef _OFM_LOGS_H
+#define _OFM_LOGS_H
+
+//   QuoteIdent turns an unquoted identifier
+//   into a (quoted) string:
+//      QuoteIdent(foo) -> "foo"
+#define QuoteIdentifier(ident) #ident
+
+//   QuoteMacro can be used to turn the value
+//  (rather than the name/ident)of the macro
+//   into a string
+#define QuoteMacro(macro) QuoteIdentifier(macro)
+
+#define OpenLog kprintf
+
+#define AlwaysLog(name, format, ...) do { OpenLog("[" QuoteMacro(PRODUCT_NAME) "][" name "] -- " format, ## __VA_ARGS__); } while (0)
+#define DebugLog
+#ifdef DEBUG
+#undef DebugLog
+#define DebugLog AlwaysLog
+#endif
 
 #endif
