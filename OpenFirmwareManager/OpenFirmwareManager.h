@@ -41,7 +41,7 @@ class OpenFirmwareManager : public IOService
     struct ResourceCallbackContext
     {
         OpenFirmwareManager * me;
-        OSData * firmware;
+        FirmwareDescriptor descriptor;
     };
     
 public:
@@ -67,8 +67,11 @@ public:
     
     static OpenFirmwareManager * withDescriptors(FirmwareDescriptor * firmwares, int capacity);
 
+    static OpenFirmwareManager * withFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity);
+
     virtual IOReturn addFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
     virtual IOReturn addFirmwareWithDescriptor(FirmwareDescriptor firmware);
+    virtual IOReturn addFirmwareWithFile(const char * kextIdentifier, const char * fileName);
 
     virtual IOReturn removeFirmware(char * name);
     virtual IOReturn removeFirmwares();
@@ -79,9 +82,12 @@ public:
     virtual OSData * getFirmwareUncompressed(char * name);
     
 protected:
+    static void requestResourceCallback(OSKextRequestTag requestTag, OSReturn result, const void * resourceData, uint32_t resourceDataLength, void * context);
+
     virtual bool initWithCapacity(int capacity);
     virtual bool initWithNames(char ** name, int capacity, FirmwareDescriptor * firmwareCandidates, int numFirmwares);
     virtual bool initWithDescriptors(FirmwareDescriptor * firmwares, int capacity);
+    virtual bool initWithFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity);
     virtual bool isFirmwareCompressed(OSData * firmware);
     virtual OSData * decompressFirmware(OSData * firmware);
     

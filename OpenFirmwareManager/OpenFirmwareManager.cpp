@@ -100,6 +100,27 @@ OSData * OpenFirmwareManager::decompressFirmware(OSData * firmware)
     return uncompressedFirmware;
 }
 
+void OpenFirmwareManager::requestResourceCallback(OSKextRequestTag requestTag, OSReturn result, const void * resourceData, uint32_t resourceDataLength, void * context1)
+{
+    ResourceCallbackContext * context = (ResourceCallbackContext *) context1;
+
+    IOLockLock(context->me->mExpansionData->mCompletionLock);
+
+    if (kOSReturnSuccess == result)
+    {
+        kprintf("[OpenFirmwareManager][requestResourceCallback] %d bytes of data.\n", resourceDataLength);
+        context->descriptor.firmwareData = (UInt8 *) resourceData;
+        context->descriptor.firmwareSize = resourceDataLength;
+    }
+    else
+        kprintf("[OpenFirmwareManager][requestResourceCallback] Retrieved error: %08x\n", result);
+
+    IOLockUnlock(context->me->mExpansionData->mCompletionLock);
+
+    // wake waiting task in performUpgrade (in IOLockSleep)...
+    IOLockWakeup(context->me->mExpansionData->mCompletionLock, context->me, true);
+}
+
 IOReturn OpenFirmwareManager::addFirmwareWithName(char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
     while ( numFirmwares > 0 )
@@ -146,6 +167,28 @@ SET_FIRMWARE:
 OVER:
     IOLockUnlock(mFirmwareLock);
     return err;
+}
+
+IOReturn OpenFirmwareManager::addFirmwareWithFile(const char * kextIdentifier, const char * fileName)
+{
+    IOLockLock(mExpansionData->mCompletionLock);
+
+    ResourceCallbackContext context = { .me = this };
+
+    OSReturn ret = OSKextRequestResource(kextIdentifier, fileName, requestResourceCallback, &context, NULL);
+    kprintf("[OpenFirmwareManager][addFirmwareWithFile] OSKextRequestResource: %08x\n", ret);
+
+    // wait for completion of the async read
+    IOLockSleep(mExpansionData->mCompletionLock, this, 0);
+    IOLockUnlock(mExpansionData->mCompletionLock);
+
+    if ( !context.descriptor.firmwareData || context.descriptor.firmwareSize <= 0 )
+        return ret;
+
+    kprintf("[OpenFirmwareManager][addFirmwareWithFile] Obtained firmware \"%s\" from resources.\n", fileName);
+    context.descriptor.name = (char *) fileName;
+
+    return addFirmwareWithDescriptor(context.descriptor);
 }
 
 IOReturn OpenFirmwareManager::removeFirmware(char * name)
@@ -228,6 +271,20 @@ bool OpenFirmwareManager::initWithDescriptors(FirmwareDescriptor * firmwares, in
     return true;
 }
 
+bool OpenFirmwareManager::initWithFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity)
+{
+    if ( !initWithCapacity(capacity) )
+        return false;
+
+    while ( capacity > 0 )
+    {
+        --capacity;
+        addFirmwareWithFile(kextIdentifiers[capacity], fileNames[capacity]);
+    }
+
+    return true;
+}
+
 OpenFirmwareManager * OpenFirmwareManager::withCapacity(int capacity)
 {
     OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
@@ -262,7 +319,21 @@ OpenFirmwareManager * OpenFirmwareManager::withDescriptors(FirmwareDescriptor * 
     
     if ( !me )
         return NULL;
-    if ( me->initWithDescriptors(firmwares, capacity) )
+    if ( !me->initWithDescriptors(firmwares, capacity) )
+    {
+        OSSafeReleaseNULL(me);
+        return NULL;
+    }
+    return me;
+}
+
+OpenFirmwareManager * OpenFirmwareManager::withFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity)
+{
+    OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
+
+    if ( !me )
+        return NULL;
+    if ( !me->initWithFiles(kextIdentifiers, fileNames, capacity) )
     {
         OSSafeReleaseNULL(me);
         return NULL;
