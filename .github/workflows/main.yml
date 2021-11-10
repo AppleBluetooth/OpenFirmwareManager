@@ -41,6 +41,7 @@ jobs:
 
     - name: Pack Artifacts
       run: |
+        cd $BUILD_OUTPUT
         zip -r OpenFirmwareManager-v${MODULE_VER}-DEBUG-alpha-${SHORT_SHA}.zip *.kext
 
     - name: Delete Old Prerelease
