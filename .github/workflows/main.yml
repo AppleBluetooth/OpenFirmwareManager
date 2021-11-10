@@ -37,7 +37,7 @@ jobs:
 
     - name: Build
       run: |
-        xcodebuild -configuration Debug -derivedDataPath build GIT_COMMIT=_${SHORT_SHA} | xcpretty && exit ${PIPESTATUS[0]}
+        xcodebuild -scheme OpenFirmwareManager -configuration Debug -derivedDataPath build GIT_COMMIT=_${SHORT_SHA} | xcpretty && exit ${PIPESTATUS[0]}
 
     - name: Pack Artifacts
       run: |
