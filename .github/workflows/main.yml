@@ -36,9 +36,12 @@ jobs:
       run: |
         git clone --depth=1 https://github.com/CharlieJiangXXX/MacKernelSDK.git
 
-    - name: Build
+    - name: Build Release
       run: |
         xcodebuild -scheme OpenFirmwareManager -configuration Release -derivedDataPath build GIT_COMMIT=_${SHORT_SHA} | xcpretty && exit ${PIPESTATUS[0]}
+        
+    - name: Build Debug
+      run: |
         xcodebuild -scheme OpenFirmwareManager -configuration Debug -derivedDataPath build GIT_COMMIT=_${SHORT_SHA} | xcpretty && exit ${PIPESTATUS[0]}
 
     - name: Pack Artifacts
