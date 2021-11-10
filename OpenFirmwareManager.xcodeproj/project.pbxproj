@@ -20,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		509E038E273B3A3500147EE1 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = MacKernelSDK/Library/x86_64/libkmod.a; sourceTree = "<group>"; };
+		BC0D3BE0273B5D5A009882E0 /* MacKernelSDK */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MacKernelSDK; sourceTree = "<group>"; };
 		BC92575A26A3FD9D009DBAD2 /* OpenFirmwareManager.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenFirmwareManager.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenFirmwareManager.h; sourceTree = "<group>"; };
 		BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OpenFirmwareManager.cpp; sourceTree = "<group>"; };
@@ -56,6 +57,7 @@
 		BC92575026A3FD9D009DBAD2 = {
 			isa = PBXGroup;
 			children = (
+				BC0D3BE0273B5D5A009882E0 /* MacKernelSDK */,
 				BC92575C26A3FD9D009DBAD2 /* OpenFirmwareManager */,
 				BCDF218026E703A400432442 /* LICENSE */,
 				BCDF218126E703A400432442 /* README.md */,
@@ -310,7 +312,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MODULE_NAME = com.cjiang.OpenFirmwareManager;
-				MODULE_VERSION = 2.0.0;
+				MODULE_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cjiang.OpenFirmwareManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -332,7 +334,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MODULE_NAME = com.cjiang.OpenFirmwareManager;
-				MODULE_VERSION = 2.0.0;
+				MODULE_VERSION = 2.0.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cjiang.OpenFirmwareManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
