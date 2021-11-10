@@ -5,7 +5,8 @@ on:
     branches: master
 
 env:
-  BUILD_OUTPUT: 'build/Build/Products/Debug'
+  RELEASE_BUILD_OUTPUT: 'build/Build/Products/Release'
+  DEBUG_BUILD_OUTPUT: 'build/Build/Products/Debug'
 
 jobs:
 
@@ -37,12 +38,15 @@ jobs:
 
     - name: Build
       run: |
+        xcodebuild -scheme OpenFirmwareManager -configuration Release -derivedDataPath build GIT_COMMIT=_${SHORT_SHA} | xcpretty && exit ${PIPESTATUS[0]}
         xcodebuild -scheme OpenFirmwareManager -configuration Debug -derivedDataPath build GIT_COMMIT=_${SHORT_SHA} | xcpretty && exit ${PIPESTATUS[0]}
 
     - name: Pack Artifacts
       run: |
-        cd $BUILD_OUTPUT
-        zip -r OpenFirmwareManager-v${MODULE_VER}-DEBUG-alpha-${SHORT_SHA}.zip *.kext
+        cd $RELEASE_BUILD_OUTPUT
+        zip -r OpenFirmwareManager-${MODULE_VER}-RELEASE-alpha-${SHORT_SHA}.zip *.kext *.dSYM
+        cd $DEBUG_BUILD_OUTPUT
+        zip -r OpenFirmwareManager-${MODULE_VER}-DEBUG-alpha-${SHORT_SHA}.zip *.kext
 
     - name: Delete Old Prerelease
       uses: dev-drprasad/delete-tag-and-release@v0.2.0
@@ -55,6 +59,6 @@ jobs:
       uses: ncipollo/release-action@v1.8.6
       with:
         prerelease: true
-        artifacts: "${{ env.BUILD_OUTPUT }}/*.zip"
+        artifacts: "${{ env.DEBUG_BUILD_OUTPUT }}/*.zip, ${{ env.RELEASE_BUILD_OUTPUT }}/*.zip"
         tag: "v${{ env.MODULE_VER }}-alpha"
         token: ${{ secrets.GITHUB_TOKEN }}
