@@ -44,10 +44,13 @@ jobs:
       run: |
         xcodebuild -scheme OpenFirmwareManager -configuration Debug -derivedDataPath build GIT_COMMIT=_${SHORT_SHA} | xcpretty && exit ${PIPESTATUS[0]}
 
-    - name: Pack Artifacts
+    - name: Pack Release Artifacts
       run: |
         cd $RELEASE_BUILD_OUTPUT
         zip -r OpenFirmwareManager-${MODULE_VER}-RELEASE-alpha-${SHORT_SHA}.zip *.kext *.dSYM
+        
+    - name: Pack Debug Artifacts
+      run: |
         cd $DEBUG_BUILD_OUTPUT
         zip -r OpenFirmwareManager-${MODULE_VER}-DEBUG-alpha-${SHORT_SHA}.zip *.kext
 
