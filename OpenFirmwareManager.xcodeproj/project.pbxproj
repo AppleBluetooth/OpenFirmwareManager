@@ -324,7 +324,10 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				EXCLUDED_SOURCE_FILE_NAMES = Settings.bundle;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					"$(PROJECT_DIR)/OpenFirmwareManager/OpenFirmwareManager.h",
+					"$(PROJECT_DIR)/OpenFirmwareManager/FirmwareList.h",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = "PRODUCT_NAME=$(PRODUCT_NAME)";
 				INFOPLIST_FILE = OpenFirmwareManager/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
