@@ -20,7 +20,6 @@
 
 /* Begin PBXFileReference section */
 		509E038E273B3A3500147EE1 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = MacKernelSDK/Library/x86_64/libkmod.a; sourceTree = "<group>"; };
-		BC0D3BE0273B5D5A009882E0 /* MacKernelSDK */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MacKernelSDK; sourceTree = "<group>"; };
 		BC92575A26A3FD9D009DBAD2 /* OpenFirmwareManager.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenFirmwareManager.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenFirmwareManager.h; sourceTree = "<group>"; };
 		BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OpenFirmwareManager.cpp; sourceTree = "<group>"; };
@@ -57,7 +56,6 @@
 		BC92575026A3FD9D009DBAD2 = {
 			isa = PBXGroup;
 			children = (
-				BC0D3BE0273B5D5A009882E0 /* MacKernelSDK */,
 				BC92575C26A3FD9D009DBAD2 /* OpenFirmwareManager */,
 				BCDF218026E703A400432442 /* LICENSE */,
 				BCDF218126E703A400432442 /* README.md */,
@@ -326,10 +324,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				EXCLUDED_SOURCE_FILE_NAMES = (
-					"$(PROJECT_DIR)/OpenFirmwareManager/OpenFirmwareManager.h",
-					"$(PROJECT_DIR)/OpenFirmwareManager/FirmwareList.h",
-				);
+				EXCLUDED_SOURCE_FILE_NAMES = Settings.bundle;
 				GCC_PREPROCESSOR_DEFINITIONS = "PRODUCT_NAME=$(PRODUCT_NAME)";
 				INFOPLIST_FILE = OpenFirmwareManager/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
