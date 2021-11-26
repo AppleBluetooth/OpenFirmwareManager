@@ -29,6 +29,7 @@ OSDefineMetaClassAndStructors(OpenFirmwareManager, super)
 
 bool OpenFirmwareManager::init(OSDictionary * dictionary)
 {
+	DebugLog("init", "Initializing variables...");
     if ( !super::init() )
         return false;
 
@@ -36,18 +37,24 @@ bool OpenFirmwareManager::init(OSDictionary * dictionary)
     mFirmwares = NULL;
     mExpansionData = IONew(ExpansionData, 1);
     if ( !mExpansionData )
-        return false;
+	{
+		AlwaysLog("init", "init() failed -- no memory.");
+		return false;
+	}
     mExpansionData->mCompletionLock = IOLockAlloc();
+	DebugLog("init", "init() completed.");
     return true;
 }
 
 void OpenFirmwareManager::free()
 {
+	DebugLog("free", "Releasing variables...");
     removeFirmwares();
     IOLockFree(mFirmwareLock);
     IOLockFree(mExpansionData->mCompletionLock);
     IOSafeDeleteNULL(mExpansionData, ExpansionData, 1);
     super::free();
+	DebugLog("free", "free() completed.");
 }
 
 bool OpenFirmwareManager::isFirmwareCompressed(OSData * firmware)
@@ -63,6 +70,7 @@ bool OpenFirmwareManager::isFirmwareCompressed(OSData * firmware)
 
 OSData * OpenFirmwareManager::decompressFirmware(OSData * firmware)
 {
+	DebugLog("decompressFirmware", "Uncompressing firmware %p...", firmware);
     OSData * uncompressedFirmware = NULL;
     z_stream zstream;
     int zlib_result;
@@ -71,6 +79,7 @@ OSData * OpenFirmwareManager::decompressFirmware(OSData * firmware)
     
     if ( !isFirmwareCompressed(firmware) )
     {
+		DebugLog("decompressFirmware", "Firmware is not compressed!");
         firmware->retain();
         return firmware;
     }
@@ -89,6 +98,7 @@ OSData * OpenFirmwareManager::decompressFirmware(OSData * firmware)
     zlib_result = inflateInit(&zstream);
     if ( zlib_result != Z_OK )
     {
+		DebugLog("decompressFirmware", "inflateInit() failed: %d", zlib_result);
         IOFree(buffer, bufferSize);
         return NULL;
     }
@@ -99,6 +109,8 @@ OSData * OpenFirmwareManager::decompressFirmware(OSData * firmware)
     
     inflateEnd(&zstream);
     IOFree(buffer, bufferSize);
+
+	DebugLog("decompressFirmware", "Firmware decompressed successfully.");
 
     return uncompressedFirmware;
 }
@@ -111,12 +123,12 @@ void OpenFirmwareManager::requestResourceCallback(OSKextRequestTag requestTag, O
 
     if (kOSReturnSuccess == result)
     {
-        DebugLog("requestResourceCallback", "%d bytes of data.\n", resourceDataLength);
+        DebugLog("requestResourceCallback", "%d bytes of data.", resourceDataLength);
         context->descriptor.firmwareData = (UInt8 *) resourceData;
         context->descriptor.firmwareSize = resourceDataLength;
     }
     else
-        DebugLog("requestResourceCallback", "Retrieved error: %08x\n", result);
+        DebugLog("requestResourceCallback", "Retrieved error: %08x", result);
 
     IOLockUnlock(context->me->mExpansionData->mCompletionLock);
 
@@ -126,15 +138,21 @@ void OpenFirmwareManager::requestResourceCallback(OSKextRequestTag requestTag, O
 
 IOReturn OpenFirmwareManager::addFirmwareWithName(const char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
+	DebugLog("addFirmwareWithName", "name: %s -- firmwareCandidates: %p -- numFirmwares: %d", name, firmwareCandidates, numFirmwares);
     while ( numFirmwares > 0 )
-        if ( firmwareCandidates[--numFirmwares].name == name )
-            return addFirmwareWithDescriptor(firmwareCandidates[numFirmwares]);
+	{
+		DebugLog("addFirmwareWithName", "candidate name: %s, name: %s", firmwareCandidates[--numFirmwares].name, name);
+        if ( !strcmp(firmwareCandidates[numFirmwares].name, name) )
+			return addFirmwareWithDescriptor(firmwareCandidates[numFirmwares]);
+	}
 
+	AlwaysLog("addFirmwareWithName", "can't find the firmware with name!\n");
     return kIOReturnUnsupported;
 }
 
 IOReturn OpenFirmwareManager::addFirmwareWithDescriptor(FirmwareDescriptor firmware)
 {
+	DebugLog("addFirmwareWithDescriptor", "name: %s -- firmwareData: %p -- firmwareSize: %d", firmware.name, firmware.firmwareData, firmware.firmwareSize);
     IOReturn err = kIOReturnSuccess;
 
     IOLockLock(mFirmwareLock);
@@ -169,17 +187,19 @@ SET_FIRMWARE:
 
 OVER:
     IOLockUnlock(mFirmwareLock);
+	DebugLog("addFirmwareWithDescriptor", "Firmware is added successfully!");
     return err;
 }
 
 IOReturn OpenFirmwareManager::addFirmwareWithFile(const char * kextIdentifier, const char * fileName)
 {
+	DebugLog("addFirmwareWithDescriptor", "identifier: %s -- file name: %s", kextIdentifier, fileName);
     IOLockLock(mExpansionData->mCompletionLock);
 
     ResourceCallbackContext context = { .me = this };
 
     OSReturn ret = OSKextRequestResource(kextIdentifier, fileName, requestResourceCallback, &context, NULL);
-    DebugLog("addFirmwareWithFile", "OSKextRequestResource: %08x\n", ret);
+    DebugLog("addFirmwareWithFile", "OSKextRequestResource: %08x", ret);
 
     // wait for completion of the async read
     IOLockSleep(mExpansionData->mCompletionLock, this, 0);
@@ -188,7 +208,7 @@ IOReturn OpenFirmwareManager::addFirmwareWithFile(const char * kextIdentifier, c
     if ( !context.descriptor.firmwareData || context.descriptor.firmwareSize <= 0 )
         return ret;
 
-    AlwaysLog("addFirmwareWithFile", "Obtained firmware \"%s\" from resources.\n", fileName);
+    DebugLog("addFirmwareWithFile", "Obtained firmware \"%s\" from resources.", fileName);
     context.descriptor.name = fileName;
 
     return addFirmwareWithDescriptor(context.descriptor);
@@ -196,6 +216,7 @@ IOReturn OpenFirmwareManager::addFirmwareWithFile(const char * kextIdentifier, c
 
 IOReturn OpenFirmwareManager::removeFirmware(const char * name)
 {
+	DebugLog("removeFirmware", "Removing firmware with the name %s", name);
     IOLockLock(mFirmwareLock);
     if ( !mFirmwares )
     {
@@ -210,6 +231,7 @@ IOReturn OpenFirmwareManager::removeFirmware(const char * name)
 
 IOReturn OpenFirmwareManager::removeFirmwares()
 {
+	DebugLog("removeFirmwares", "Removing all firmwares...");
     IOLockLock(mFirmwareLock);
     if ( !mFirmwares )
     {
@@ -238,9 +260,11 @@ OSData * OpenFirmwareManager::getFirmwareUncompressed(const char * name)
 
 bool OpenFirmwareManager::initWithCapacity(int capacity)
 {
+	DebugLog("initWithCapacity", "capacity: %d", capacity);
     if ( !init() || capacity <= 0 )
         return false;
 
+	DebugLog("initWithCapacity", "init() succeeded!");
     IOLockLock(mFirmwareLock);
     mFirmwares = OSDictionary::withCapacity(capacity);
     if ( !mFirmwares )
@@ -249,6 +273,7 @@ bool OpenFirmwareManager::initWithCapacity(int capacity)
         return false;
     }
     IOLockUnlock(mFirmwareLock);
+	DebugLog("initWithCapacity", "initialized successfully!");
     return true;
 }
 
@@ -260,6 +285,7 @@ bool OpenFirmwareManager::initWithNames(const char ** names, int capacity, Firmw
     while ( capacity > 0 )
         addFirmwareWithName(names[--capacity], firmwareCandidates, numFirmwares);
 
+	DebugLog("initWithNames", "initialized successfully!");
     return true;
 }
 
@@ -268,7 +294,13 @@ bool OpenFirmwareManager::initWithName(const char * name, FirmwareDescriptor * f
     if ( !initWithCapacity(1) )
         return false;
 
-    return !addFirmwareWithName(name, firmwareCandidates, numFirmwares);
+	if ( !addFirmwareWithName(name, firmwareCandidates, numFirmwares) )
+	{
+		DebugLog("initWithName", "initialized successfully!");
+		return true;
+	}
+	DebugLog("initWithName", "initialization failed!");
+	return false;
 }
 
 bool OpenFirmwareManager::initWithDescriptors(FirmwareDescriptor * firmwares, int capacity)
@@ -279,6 +311,7 @@ bool OpenFirmwareManager::initWithDescriptors(FirmwareDescriptor * firmwares, in
     while ( capacity > 0 )
         addFirmwareWithDescriptor(firmwares[--capacity]); // no need to fail if a firmware is not added
 
+	DebugLog("initWithDescriptors", "initialized successfully!");
     return true;
 }
 
@@ -287,7 +320,13 @@ bool OpenFirmwareManager::initWithDescriptor(FirmwareDescriptor firmware)
     if ( !initWithCapacity(1) )
         return false;
 
-    return !addFirmwareWithDescriptor(firmware);
+	if ( !addFirmwareWithDescriptor(firmware) )
+	{
+		DebugLog("initWithDescriptor", "initialized successfully!");
+		return true;
+	}
+	DebugLog("initWithDescriptor", "initialization failed!");
+	return false;
 }
 
 bool OpenFirmwareManager::initWithFiles(const char ** kextIdentifiers, const char ** fileNames, int capacity)
@@ -301,6 +340,7 @@ bool OpenFirmwareManager::initWithFiles(const char ** kextIdentifiers, const cha
         addFirmwareWithFile(kextIdentifiers[capacity], fileNames[capacity]);
     }
 
+	DebugLog("initWithFiles", "initialized successfully!");
     return true;
 }
 
@@ -309,7 +349,13 @@ bool OpenFirmwareManager::initWithFile(const char * kextIdentifier, const char *
     if ( !initWithCapacity(1) )
         return false;
 
-    return !addFirmwareWithFile(kextIdentifier, fileName);
+	if ( !addFirmwareWithFile(kextIdentifier, fileName) )
+	{
+		DebugLog("initWithFile", "initialized successfully!");
+		return true;
+	}
+	DebugLog("initWithFile", "initialization failed!");
+	return false;
 }
 
 OpenFirmwareManager * OpenFirmwareManager::withCapacity(int capacity)
@@ -342,7 +388,7 @@ OpenFirmwareManager * OpenFirmwareManager::withNames(const char ** names, int ca
 
 OpenFirmwareManager * OpenFirmwareManager::withName(const char * name, FirmwareDescriptor * firmwareCandidates, int numFirmwares)
 {
-    OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
+	OpenFirmwareManager * me = OSTypeAlloc(OpenFirmwareManager);
 
     if ( !me )
         return NULL;

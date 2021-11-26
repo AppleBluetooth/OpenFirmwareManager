@@ -24,7 +24,7 @@
 
 #define OpenLog kprintf
 
-#define AlwaysLog(name, format, ...) do { OpenLog("[" OS_STRINGIFY(PRODUCT_NAME) "][" name "] -- " format, ## __VA_ARGS__); } while (0)
+#define AlwaysLog(name, format, ...) do { OpenLog("[" OS_STRINGIFY(PRODUCT_NAME) "][" name "] -- " format, ## __VA_ARGS__); OpenLog("\n"); } while (0)
 
 #ifdef DEBUG
 #define DebugLog AlwaysLog
