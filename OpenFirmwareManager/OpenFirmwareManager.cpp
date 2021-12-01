@@ -142,7 +142,7 @@ IOReturn OpenFirmwareManager::addFirmwareWithName(const char * name, FirmwareDes
     while ( numFirmwares > 0 )
 	{
 		DebugLog("addFirmwareWithName", "candidate name: %s, name: %s", firmwareCandidates[--numFirmwares].name, name);
-        if ( !strcmp(firmwareCandidates[numFirmwares].name, name) )
+        if ( !strncmp(firmwareCandidates[numFirmwares].name, name, 64) )
 			return addFirmwareWithDescriptor(firmwareCandidates[numFirmwares]);
 	}
 
