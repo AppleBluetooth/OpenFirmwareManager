@@ -28,6 +28,7 @@
 		BC92576926A3FDF6009DBAD2 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
 		BCA7842A273AEAE900895B2F /* Logs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logs.h; sourceTree = "<group>"; };
 		BCAAACE727339790005667DB /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		BCB187B6275F0688007E286A /* bootstrap.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = bootstrap.sh; sourceTree = "<group>"; };
 		BCB7BA1F2738DE390029BC09 /* FirmwareList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirmwareList.h; sourceTree = "<group>"; };
 		BCDF218026E703A400432442 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		BCDF218126E703A400432442 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -57,6 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				BC92575C26A3FD9D009DBAD2 /* OpenFirmwareManager */,
+				BCB187B6275F0688007E286A /* bootstrap.sh */,
 				BCDF218026E703A400432442 /* LICENSE */,
 				BCDF218126E703A400432442 /* README.md */,
 				BCAAACE727339790005667DB /* .gitignore */,
