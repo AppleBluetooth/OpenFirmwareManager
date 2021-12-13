@@ -22,7 +22,7 @@
 		509E038E273B3A3500147EE1 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = MacKernelSDK/Library/x86_64/libkmod.a; sourceTree = "<group>"; };
 		BC92575A26A3FD9D009DBAD2 /* OpenFirmwareManager.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenFirmwareManager.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenFirmwareManager.h; sourceTree = "<group>"; };
-		BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OpenFirmwareManager.cpp; sourceTree = "<group>"; };
+		BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OpenFirmwareManager.cpp; sourceTree = "<group>"; usesTabs = 1; };
 		BC92576126A3FD9D009DBAD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC92576826A3FDF6009DBAD2 /* zutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zutil.cpp; sourceTree = "<group>"; };
 		BC92576926A3FDF6009DBAD2 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
