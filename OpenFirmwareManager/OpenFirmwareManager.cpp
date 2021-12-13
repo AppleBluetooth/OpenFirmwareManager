@@ -141,12 +141,13 @@ IOReturn OpenFirmwareManager::addFirmwareWithName(const char * name, FirmwareDes
 	DebugLog("addFirmwareWithName", "name: %s -- firmwareCandidates: %p -- numFirmwares: %d", name, firmwareCandidates, numFirmwares);
     while ( numFirmwares > 0 )
 	{
-		DebugLog("addFirmwareWithName", "candidate name: %s, name: %s", firmwareCandidates[--numFirmwares].name, name);
+		--numFirmwares;
+		DebugLog("addFirmwareWithName", "candidate name: %s, name: %s", firmwareCandidates[numFirmwares].name, name);
         if ( !strncmp(firmwareCandidates[numFirmwares].name, name, 64) )
 			return addFirmwareWithDescriptor(firmwareCandidates[numFirmwares]);
 	}
 
-	AlwaysLog("addFirmwareWithName", "can't find the firmware with name!\n");
+	AlwaysLog("addFirmwareWithName", "can't find the firmware with name!");
     return kIOReturnUnsupported;
 }
 
