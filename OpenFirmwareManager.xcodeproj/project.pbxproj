@@ -21,15 +21,15 @@
 /* Begin PBXFileReference section */
 		509E038E273B3A3500147EE1 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = MacKernelSDK/Library/x86_64/libkmod.a; sourceTree = "<group>"; };
 		BC92575A26A3FD9D009DBAD2 /* OpenFirmwareManager.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenFirmwareManager.kext; sourceTree = BUILT_PRODUCTS_DIR; };
-		BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenFirmwareManager.h; sourceTree = "<group>"; };
-		BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OpenFirmwareManager.cpp; sourceTree = "<group>"; usesTabs = 1; };
+		BC92575D26A3FD9D009DBAD2 /* OpenFirmwareManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenFirmwareManager.h; sourceTree = "<group>"; usesTabs = 0; };
+		BC92575F26A3FD9D009DBAD2 /* OpenFirmwareManager.cpp */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenFirmwareManager.cpp; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
 		BC92576126A3FD9D009DBAD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BC92576826A3FDF6009DBAD2 /* zutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zutil.cpp; sourceTree = "<group>"; };
-		BC92576926A3FDF6009DBAD2 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
-		BCA7842A273AEAE900895B2F /* Logs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logs.h; sourceTree = "<group>"; };
+		BC92576826A3FDF6009DBAD2 /* zutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = zutil.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		BC92576926A3FDF6009DBAD2 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; usesTabs = 0; };
+		BCA7842A273AEAE900895B2F /* Logs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logs.h; sourceTree = "<group>"; usesTabs = 0; };
 		BCAAACE727339790005667DB /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		BCB187B6275F0688007E286A /* bootstrap.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = bootstrap.sh; sourceTree = "<group>"; };
-		BCB7BA1F2738DE390029BC09 /* FirmwareList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirmwareList.h; sourceTree = "<group>"; };
+		BCB7BA1F2738DE390029BC09 /* FirmwareList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirmwareList.h; sourceTree = "<group>"; usesTabs = 0; };
 		BCDF218026E703A400432442 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		BCDF218126E703A400432442 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
